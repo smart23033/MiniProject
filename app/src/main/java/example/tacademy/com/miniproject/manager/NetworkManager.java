@@ -44,6 +44,9 @@ public class NetworkManager {
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
         builder.cookieJar(cookieJar);
 
+        builder.followRedirects(true);
+        builder.addInterceptor(new RedirectInterceptor());
+
         File cacheDir = new File(context.getCacheDir(), "network");
         if (!cacheDir.exists()) {
             cacheDir.mkdirs();
