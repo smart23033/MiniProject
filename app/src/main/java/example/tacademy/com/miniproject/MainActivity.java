@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         tabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
         tabHost.addTab(tabHost.newTabSpec("main").setIndicator("Main"), MainFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec("chat").setIndicator("Chat"), ChatUserFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("content").setIndicator("Content"), ContentFragment.class, null);
+
     }
 
     @Override
