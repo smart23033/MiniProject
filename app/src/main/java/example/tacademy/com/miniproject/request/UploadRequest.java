@@ -38,7 +38,7 @@ public class UploadRequest extends AbstractRequest<NetworkResult<ContentData>> {
         request = new Request.Builder()
                 .url(url)
                 .post(body)
-                .tag(content)
+                .tag(context)
                 .build();
 
     }
