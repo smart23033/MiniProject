@@ -41,7 +41,6 @@ public class ContentAddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content_add);
         ButterKnife.bind(this);
-
         if (savedInstanceState != null) {
             String path = savedInstanceState.getString(FIELD_SAVE_FILE);
             if (!TextUtils.isEmpty(path)) {
@@ -64,17 +63,17 @@ public class ContentAddActivity extends AppCompatActivity {
     private static final int INDEX_CAMERA = 1;
 
     @OnClick(R.id.btn_get_image)
-    public void onGetImageClick(View view){
+    public void onGetImageClick(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Image");
-        builder.setItems(R.array.select_image,new DialogInterface.OnClickListener(){
+        builder.setItems(R.array.select_image, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                switch (i){
-                    case INDEX_GALLERY:
+                switch (i) {
+                    case INDEX_GALLERY :
                         getGalleryImage();
                         break;
-                    case INDEX_CAMERA:
+                    case INDEX_CAMERA :
                         getCaptureImage();
                         break;
                 }
@@ -83,16 +82,16 @@ public class ContentAddActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    private void getGalleryImage(){
+    private void getGalleryImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
-        startActivityForResult(intent,RC_GET_IMAGE);
+        startActivityForResult(intent, RC_GET_IMAGE);
     }
 
-    private void getCaptureImage(){
+    private void getCaptureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,getSaveFile());
-        startActivityForResult(intent,RC_CATPURE_IMAGE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getSaveFile());
+        startActivityForResult(intent, RC_CATPURE_IMAGE);
     }
 
     private Uri getSaveFile() {
@@ -120,15 +119,14 @@ public class ContentAddActivity extends AppCompatActivity {
 
     File savedFile = null;
     File uploadFile = null;
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_GET_IMAGE){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == RC_GET_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
                 Uri uri = data.getData();
-                Cursor c = getContentResolver().query(uri, new String[]{MediaStore.Images.Media.DATA},null,null,null);
-                if(c.moveToNext()){
+                Cursor c = getContentResolver().query(uri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+                if (c.moveToNext()) {
                     String path = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA));
                     uploadFile = new File(path);
                     Glide.with(this)
@@ -136,25 +134,33 @@ public class ContentAddActivity extends AppCompatActivity {
                             .into(pictureView);
                 }
             }
+        } else if (requestCode == RC_CATPURE_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
+                uploadFile = savedFile;
+                Glide.with(this)
+                        .load(uploadFile)
+                        .into(pictureView);
+            }
         }
     }
 
     @OnClick(R.id.btn_upload)
-    public void onUpload(){
+    public void onUpload() {
         String content = messageView.getText().toString();
-        if(!TextUtils.isEmpty(content) && uploadFile != null){
-            UploadRequest request = new UploadRequest(this,content,uploadFile);
+        if (!TextUtils.isEmpty(content) && uploadFile != null) {
+            UploadRequest request = new UploadRequest(this, content, uploadFile);
             NetworkManager.getInstance().getNetworkData(request, new NetworkManager.OnResultListener<NetworkResult<ContentData>>() {
                 @Override
                 public void onSuccess(NetworkRequest<NetworkResult<ContentData>> request, NetworkResult<ContentData> result) {
-                    Toast.makeText(ContentAddActivity.this,"success",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ContentAddActivity.this, "success", Toast.LENGTH_SHORT).show();
                     finish();
                 }
 
                 @Override
                 public void onFail(NetworkRequest<NetworkResult<ContentData>> request, int errorCode, String errorMessage, Throwable e) {
-                    Toast.makeText(ContentAddActivity.this,"fail",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ContentAddActivity.this, "fail", Toast.LENGTH_SHORT).show();
                 }
+
             });
         }
     }
