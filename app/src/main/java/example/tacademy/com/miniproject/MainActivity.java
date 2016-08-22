@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.facebook.login.LoginManager;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(NetworkRequest<NetworkResult<String>> request, NetworkResult<String> result) {
                     PropertyManager.getInstance().setEmail("");
                     PropertyManager.getInstance().setPassword("");
+                    PropertyManager.getInstance().setFacebookId("");
+                    LoginManager.getInstance().logOut();
                     Intent intent = new Intent(MainActivity.this, SimpleLoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

@@ -42,9 +42,13 @@ public class ContentAddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_content_add);
         ButterKnife.bind(this);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             String path = savedInstanceState.getString(FIELD_SAVE_FILE);
-            if(!TextUtils.isEmpty(path)){
+            if (!TextUtils.isEmpty(path)) {
+                savedFile = new File(path);
+            }
+            path = savedInstanceState.getString(FIELD_UPLOAD_FILE);
+            if (!TextUtils.isEmpty(path)) {
                 uploadFile = new File(path);
                 Glide.with(this)
                         .load(uploadFile)
@@ -76,6 +80,7 @@ public class ContentAddActivity extends AppCompatActivity {
                 }
             }
         });
+        builder.create().show();
     }
 
     private void getGalleryImage(){
