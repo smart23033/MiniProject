@@ -25,8 +25,14 @@ import example.tacademy.com.miniproject.request.FriendListRequest;
 import example.tacademy.com.miniproject.request.LogOutRequest;
 
 public class MainActivity extends AppCompatActivity {
+
     @BindView(R.id.tabhost)
     FragmentTabHost tabHost;
+
+    public static final String EXTRA_TAB_INDEX = "tabindex";
+    public static final int TAB_MAIN = 0;
+    public static final int TAB_CHAT = 1;
+    public static final int TAB_CONTENT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         tabHost.addTab(tabHost.newTabSpec("main").setIndicator("Main"), MainFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec("chat").setIndicator("Chat"), ChatUserFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec("content").setIndicator("Content"), ContentFragment.class, null);
-
+        int index = getIntent().getIntExtra(EXTRA_TAB_INDEX, 0);
+        tabHost.setCurrentTab(index);
     }
 
     @Override

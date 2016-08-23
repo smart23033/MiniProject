@@ -11,6 +11,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -24,9 +25,7 @@ import okhttp3.OkHttpClient;
  * Created by Tacademy on 2016-08-09.
  */
 public class NetworkManager {
-
     private static NetworkManager instance;
-
     public static NetworkManager getInstance() {
         if (instance == null) {
             instance = new NetworkManager();
@@ -43,7 +42,6 @@ public class NetworkManager {
         ClearableCookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
         builder.cookieJar(cookieJar);
-
         builder.followRedirects(true);
         builder.addInterceptor(new RedirectInterceptor());
 
@@ -103,6 +101,10 @@ public class NetworkManager {
     public <T> void getNetworkData(NetworkRequest<T> request, OnResultListener<T> listener) {
         request.setOnResultListener(listener);
         request.process(client);
+    }
+
+    public <T> T getNetworkDataSync(NetworkRequest<T> request) throws IOException {
+        return request.processSync(client);
     }
 
     public void cancelAll() {
